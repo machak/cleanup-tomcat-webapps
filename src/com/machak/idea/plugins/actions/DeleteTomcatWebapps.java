@@ -67,11 +67,11 @@ public class DeleteTomcatWebapps extends AnAction {
 
 
             final String[] filePaths = sharedDirectory.list();
-            if (!component.isShowDialog()) {
-                for (String name : filePaths) {
-                    deleteFile(new File(name));
-                }
+            //if (!component.isShowDialog()) {
+            for (String name : filePaths) {
+                deleteFile(new File(String.format("%s%s", webappsDirectory, name)));
             }
+            //}
 
         }
 
