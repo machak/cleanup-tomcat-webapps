@@ -6,7 +6,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package com.machak.idea.plugins.config;
+package com.machak.idea.plugins.tomcat.config;
 
 import javax.swing.JComponent;
 

@@ -6,7 +6,7 @@
 <idea-plugin version="2">
   <id>com.machak.tomcat.plugin.id</id>
   <name>Cleanup tomcat webapps dir</name>
-  <version>1.0.2</version>
+  <version>1.0.0</version>
   <vendor email="me@machak.com" url="https://github.com/machak/intellij-cleanup-tomcat-dir">machak</vendor>
 
   <description><![CDATA[
@@ -14,7 +14,7 @@
       ]]></description>
 
   <change-notes><![CDATA[
-      1.0 initial release <br />
+      1.0.0 initial release <br />
       ]]>
   </change-notes>
 
@@ -30,17 +30,17 @@
 
   <application-components>
     <component>
-      <implementation-class>com.machak.idea.plugins.config.ApplicationComponent</implementation-class>
+      <implementation-class>com.machak.idea.plugins.tomcat.config.ApplicationComponent</implementation-class>
     </component>
   </application-components>
   <project-components>
     <component>
-      <implementation-class>com.machak.idea.plugins.config.ProjectComponent</implementation-class>
+      <implementation-class>com.machak.idea.plugins.tomcat.config.ProjectComponent</implementation-class>
     </component>
   </project-components>
 
   <actions>
-    <action icon="/icons/icon_delete.png" id="g-delete-tomcat-dir" class="com.machak.idea.plugins.actions.DeleteTomcatWebapps" text="DeleteTomcatWebapps" description="Delete tomcat webapps dir">
+    <action icon="/icons/icon_delete.png" id="g-delete-tomcat-dir" class="com.machak.idea.plugins.tomcat.actions.DeleteTomcatWebapps" text="DeleteTomcatWebapps" description="Delete tomcat webapps dir">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
       <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D" second-keystroke="shift ctrl alt D"/>
     </action>

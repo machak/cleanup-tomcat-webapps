@@ -4,11 +4,12 @@
  */
 
 
-package com.machak.idea.plugins.actions;
+package com.machak.idea.plugins.tomcat.actions;
 
 import java.io.File;
 
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationDisplayType;
 import com.intellij.notification.NotificationGroup;
@@ -18,8 +19,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.machak.idea.plugins.config.ApplicationComponent;
-import com.machak.idea.plugins.config.ProjectComponent;
+import com.intellij.openapi.util.io.FileUtil;
+import com.machak.idea.plugins.tomcat.config.ApplicationComponent;
+import com.machak.idea.plugins.tomcat.config.ProjectComponent;
 
 
 public class DeleteTomcatWebapps extends AnAction {
@@ -82,7 +84,7 @@ public class DeleteTomcatWebapps extends AnAction {
         if (!file.exists()) {
             return;
         }
-        final boolean deleted = file.delete();
+        final boolean deleted = FileUtil.delete(file);
         if (deleted) {
             info(String.format("Deleted: %s", filePath));
         } else {

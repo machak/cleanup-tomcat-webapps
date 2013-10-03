@@ -5,7 +5,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package com.machak.idea.plugins.config;
+package com.machak.idea.plugins.tomcat.config;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

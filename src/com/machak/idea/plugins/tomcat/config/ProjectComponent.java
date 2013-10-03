@@ -6,7 +6,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package com.machak.idea.plugins.config;
+package com.machak.idea.plugins.tomcat.config;
 
 
 import com.intellij.openapi.components.State;
@@ -17,7 +17,11 @@ import com.intellij.openapi.components.StorageScheme;
 /**
  * @version "$Id$"
  */
-@State(name = "TomcatDeleteWebappsConfig", storages = {@Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+@State(
+        name = "TomcatDeleteWebappsConfig",
+        storages = {
+                @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
+                @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ProjectComponent extends ApplicationComponent implements com.intellij.openapi.components.ProjectComponent {
 
 
