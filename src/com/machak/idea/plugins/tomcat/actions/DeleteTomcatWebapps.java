@@ -16,6 +16,7 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -30,13 +31,13 @@ public class DeleteTomcatWebapps extends AnAction {
     public static final NotificationGroup ERROR_GROUP = new NotificationGroup("Tomcat delete webapps error messages", NotificationDisplayType.BALLOON, true);
     public static final NotificationGroup INFO_GROUP = new NotificationGroup("Tomcat delete webapps messages", NotificationDisplayType.NONE, false);
     private Project project;
-    private String[] myFiles;
-    private boolean[] myCheckedMarks;
 
+
+    @Override
     public void actionPerformed(AnActionEvent event) {
 
 
-        project = PlatformDataKeys.PROJECT.getData(event.getDataContext());
+        project = CommonDataKeys.PROJECT.getData(event.getDataContext());
         if (project != null) {
             // project settings have higher priority (override):
             ApplicationComponent component = project.getComponent(ProjectComponent.class);
