@@ -28,7 +28,6 @@
   <depends>com.machak.idea.plugins.com.intellij.modules.lang</depends>
   -->
 
-
   <application-components>
     <component>
       <implementation-class>com.machak.idea.plugins.tomcat.config.ApplicationComponent</implementation-class>
@@ -40,11 +39,18 @@
     </component>
   </project-components>
 
+  
   <actions>
     <action icon="/icons/icon_delete.png" id="g-delete-tomcat-dir" class="com.machak.idea.plugins.tomcat.actions.DeleteTomcatWebapps" text="DeleteTomcatWebapps" description="Delete tomcat webapps dir">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
       <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl D" second-keystroke="shift ctrl alt D"/>
     </action>
   </actions>
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="com.machak.idea.plugins.tomcat.config.StorageState" serviceImplementation="com.machak.idea.plugins.tomcat.config.StorageState"/>
+    <projectService serviceInterface="com.machak.idea.plugins.tomcat.config.StorageState" serviceImplementation="com.machak.idea.plugins.tomcat.config.StorageState"/>
+    <projectConfigurable id="delete.tomcat.webapps.project.configurable" displayName="Delete tomcat webapps(Project)" instance="com.machak.idea.plugins.tomcat.config.ProjectComponent"/>
+    <applicationConfigurable id="delete.tomcat.webapps..app.configurable" displayName="Delete tomcat webapps (Global)" instance="com.machak.idea.plugins.tomcat.config.ApplicationComponent"/>
+  </extensions>
 
 </idea-plugin>

@@ -19,6 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.intellij.ide.DataManager;
@@ -39,6 +40,7 @@ public class PluginConfiguration extends BaseConfigurable {
     private JLabel label;
     private JPanel mainPanel;
     private JCheckBox showConfirmationDialog;
+    private JCheckBox deleteLogFiles;
     private TextFieldWithBrowseButton tomcatDirectory;
 
 
@@ -51,11 +53,7 @@ public class PluginConfiguration extends BaseConfigurable {
         };
         tomcatDirectory.getChildComponent().getDocument().addDocumentListener(listener);
         tomcatDirectory.setTextFieldPreferredWidth(50);
-        tomcatDirectory.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                chooseFolder(tomcatDirectory, false);
-            }
-        });
+        tomcatDirectory.addActionListener(e -> chooseFolder(tomcatDirectory, false));
 
 
     }
@@ -89,8 +87,27 @@ public class PluginConfiguration extends BaseConfigurable {
     public void disposeUIResources() {
     }
 
-    public boolean isModified(ApplicationComponent component) {
-        final boolean changed = showConfirmationDialog.isSelected() != component.isShowDialog();
+    public void setData(final StorageState state) {
+        state.setShowDialog(showConfirmationDialog.isSelected());
+        state.setDeleteLogFiles(deleteLogFiles.isSelected());
+        state.setTomcatDirectory(tomcatDirectory.getText());
+
+
+    }
+
+    public void getData(final StorageState state) {
+
+        showConfirmationDialog.setSelected(state.isShowDialog());
+        tomcatDirectory.setText(state.getTomcatDirectory());
+    }
+
+    public boolean isModified(final StorageState component) {
+         boolean changed = showConfirmationDialog.isSelected() != component.isShowDialog();
+
+        if (changed) {
+            return true;
+        }
+         changed = deleteLogFiles.isSelected() != component.isDeleteLogFiles();
 
         if (changed) {
             return true;
@@ -101,18 +118,7 @@ public class PluginConfiguration extends BaseConfigurable {
 
     }
 
-    public void storeDataTo(ApplicationComponent component) {
-        component.setShowDialog(showConfirmationDialog.isSelected());
-        component.setTomcatDirectory(tomcatDirectory.getText());
-
-    }
-
-    public void readDataFrom(ApplicationComponent component) {
-
-        showConfirmationDialog.setSelected(component.isShowDialog());
-        tomcatDirectory.setText(component.getTomcatDirectory());
-    }
-
+   
     public Project getProject(final Component component) {
         Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(component));
         if (project != null) {
@@ -146,7 +152,7 @@ public class PluginConfiguration extends BaseConfigurable {
                 return virtualFile.getName();
             }
 
-            @Nullable
+            @NotNull
             public String getComment(VirtualFile virtualFile) {
                 return virtualFile.getPresentableUrl();
             }

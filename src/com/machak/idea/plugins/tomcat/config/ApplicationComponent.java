@@ -8,33 +8,29 @@
 
 package com.machak.idea.plugins.tomcat.config;
 
-import javax.swing.JComponent;
-
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StorageScheme;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.StoragePathMacros;
-import com.intellij.openapi.components.StorageScheme;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
+import javax.swing.*;
 
 
-@State(name = "TomcatDeleteWebapps", storages = {@Storage(file = "machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
-public class ApplicationComponent implements com.intellij.openapi.components.ApplicationComponent, Configurable, PersistentStateComponent<Element> {
+public class ApplicationComponent extends BaseConfig implements com.intellij.openapi.components.ApplicationComponent, Configurable {
 
 
-    public static final String SHOW_DIALOG_ATTRIBUTE = "showDialog";
-    public static final String TOMCAT_DIR_ATTRIBUTE = "tomcatDirectory";
-    public static final String CONFIGURATION_CONFIG_ELEMENT = "tomcat-webapps-config";
-    private String tomcatDirectory;
     private PluginConfiguration configPane;
-    private boolean showDialog;
+
+    public ApplicationComponent() {
+        this.state = StorageState.getInstance();
+    }
 
     @Override
     public void initComponent() {
@@ -47,39 +43,14 @@ public class ApplicationComponent implements com.intellij.openapi.components.App
     @NotNull
     @Override
     public String getComponentName() {
-        return "TomcatDeleteWebappsComponent";
+        return "ApplicationComponent";
     }
 
-    @Override
-    public Element getState() {
-        final Element element = new Element(CONFIGURATION_CONFIG_ELEMENT);
-        checkNullSave(element, SHOW_DIALOG_ATTRIBUTE, String.valueOf(showDialog));
-        checkNullSave(element, TOMCAT_DIR_ATTRIBUTE, tomcatDirectory);
-        return element;
-    }
-
-    @Override
-    public void loadState(final Element element) {
-
-        String show = element.getAttributeValue(SHOW_DIALOG_ATTRIBUTE);
-        if (StringUtils.isNotBlank(show)) {
-            showDialog = Boolean.valueOf(show);
-        }
-        tomcatDirectory = element.getAttributeValue(TOMCAT_DIR_ATTRIBUTE);
-    }
-
-    public boolean isShowDialog() {
-        return showDialog;
-    }
-
-    public void setShowDialog(final boolean showDialog) {
-        this.showDialog = showDialog;
-    }
 
     @Nls
     @Override
     public String getDisplayName() {
-        return "Delete tomcat webapps";
+        return "Delete tomcat webapps (Global)";
     }
 
     @Nullable
@@ -99,40 +70,25 @@ public class ApplicationComponent implements com.intellij.openapi.components.App
 
     @Override
     public boolean isModified() {
-        return configPane != null && configPane.isModified(this);
+        return configPane != null && configPane.isModified(state);
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         if (configPane != null) {
-            configPane.storeDataTo(this);
+            configPane.setData(state);
         }
     }
 
     @Override
     public void reset() {
         if (configPane != null) {
-            configPane.readDataFrom(this);
+            configPane.getData(state);
         }
     }
 
     @Override
     public void disposeUIResources() {
         configPane = null;
-    }
-
-    public String getTomcatDirectory() {
-        return tomcatDirectory;
-    }
-
-    public void setTomcatDirectory(final String tomcatDirectory) {
-        this.tomcatDirectory = tomcatDirectory;
-    }
-
-    private void checkNullSave(final Element element, final String attr, final String value) {
-        if (value == null) {
-            return;
-        }
-        element.setAttribute(attr, value);
     }
 }

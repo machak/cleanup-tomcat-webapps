@@ -9,10 +9,7 @@ package com.machak.idea.plugins.tomcat.actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.google.common.base.Strings;
 import com.intellij.notification.Notification;
@@ -28,7 +25,9 @@ import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.io.FileUtil;
 import com.machak.idea.plugins.tomcat.config.ApplicationComponent;
+import com.machak.idea.plugins.tomcat.config.BaseConfig;
 import com.machak.idea.plugins.tomcat.config.ProjectComponent;
+import com.machak.idea.plugins.tomcat.config.StorageState;
 
 
 public class DeleteTomcatWebapps extends AnAction {
@@ -43,10 +42,11 @@ public class DeleteTomcatWebapps extends AnAction {
     public void actionPerformed(AnActionEvent event) {
 
 
+
         project = CommonDataKeys.PROJECT.getData(event.getDataContext());
         if (project != null) {
             // project settings have higher priority (override):
-            ApplicationComponent component = project.getComponent(ProjectComponent.class);
+            BaseConfig component = project.getComponent(ProjectComponent.class);
             if (notValid(component)) {
                 // try to fetch application (global) settings:
                 component = ApplicationManager.getApplication().getComponent(ApplicationComponent.class);
@@ -57,8 +57,8 @@ public class DeleteTomcatWebapps extends AnAction {
                     }
                 }
             }
-
-            String webappsDirectory = component.getTomcatDirectory();
+            final StorageState state = component.getState();
+            String webappsDirectory = state.getTomcatDirectory();
             // check if we have correct settings:
             if (Strings.isNullOrEmpty(webappsDirectory)) {
                 error("Tomcat webapps dir not defined");
@@ -101,31 +101,53 @@ public class DeleteTomcatWebapps extends AnAction {
                 return;
             }
 
-            if (component.isShowDialog()) {
-                showDeletePopup(webappsDirectory, webappDir);
+            if (state.isShowDialog()) {
+                showDeletePopup(webappsDirectory, webappDir, state);
 
             } else {
-                deleteFiles(webappsDirectory, webappDir);
+                deleteFiles(webappsDirectory, webappDir, state);
             }
 
         }
 
     }
 
-    private void deleteFiles(final String webappsDirectory, final File webappDir) {
+    private void deleteFiles(final String webappsDirectory, final File webappDir, final StorageState state) {
         final String[] filePaths = webappDir.list();
         for (String name : filePaths) {
             deleteFile(new File(String.format("%s%s", webappsDirectory, name)));
         }
+        // check if logs needs to be deleted:
+        if (state.isDeleteLogFiles()) {
+            final File parentFile = webappDir.getParentFile();
+            if (parentFile.isDirectory()) {
+                final String logDirectory = parentFile.getAbsolutePath() + File.separator + "logs";
+                final File logDir = new File(logDirectory);
+                if (logDir.exists() && logDir.isDirectory()) {
+                    final File[] files = logDir.listFiles();
+                    for (File file : files) {
+                        if (!file.isDirectory()) {
+                            deleteFile(file);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
-    private void showDeletePopup(final String webappsDirectory, final File webappDir) {
+    private void showDeletePopup(final String webappsDirectory, final File webappDir, final StorageState state) {
 
         final String absolutePath = webappDir.getAbsolutePath();
         final DialogBuilder dialogBuilder = new DialogBuilder(project);
         dialogBuilder.setTitle("Create project file:");
         final JPanel simplePanel = new JPanel();
+        simplePanel.setLayout(new BoxLayout(simplePanel, BoxLayout.Y_AXIS));
         simplePanel.add(new JLabel("All directories within: " + absolutePath + " will be deleted"));
+        if (state.isDeleteLogFiles()) {
+            simplePanel.add(new JToolBar.Separator());
+            simplePanel.add(new JLabel("All Log files will be deleted"));
+        }
         dialogBuilder.setCenterPanel(simplePanel);
 
         final Action acceptAction = new AbstractAction() {
@@ -133,7 +155,7 @@ public class DeleteTomcatWebapps extends AnAction {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                deleteFiles(webappsDirectory, webappDir);
+                deleteFiles(webappsDirectory, webappDir, state);
                 dialogBuilder.getDialogWrapper().close(DialogWrapper.OK_EXIT_CODE);
 
 
@@ -160,8 +182,8 @@ public class DeleteTomcatWebapps extends AnAction {
         }
     }
 
-    private boolean notValid(final ApplicationComponent component) {
-        return component == null || Strings.isNullOrEmpty(component.getTomcatDirectory());
+    private boolean notValid(final BaseConfig component) {
+        return component == null || Strings.isNullOrEmpty(component.getState().getTomcatDirectory());
     }
 
     private void error(final String message) {
