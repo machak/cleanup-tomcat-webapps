@@ -25,7 +25,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 
 
-@State(name = "TomcatDeleteWebapps", storages = {@Storage(id = "dir", file = StoragePathMacros.APP_CONFIG + "/machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+@State(name = "TomcatDeleteWebapps", storages = {@Storage(file = "machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ApplicationComponent implements com.intellij.openapi.components.ApplicationComponent, Configurable, PersistentStateComponent<Element> {
 
 

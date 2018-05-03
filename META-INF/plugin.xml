@@ -3,7 +3,7 @@
   http://www.apache.org/licenses/LICENSE-2.0
   -->
 
-<idea-plugin version="2">
+<idea-plugin>
   <id>com.machak.tomcat.plugin.id</id>
   <name>Cleanup tomcat webapps dir</name>
   <version>1.0.0</version>
@@ -14,6 +14,7 @@
       ]]></description>
 
   <change-notes><![CDATA[
+      1.1.0 option to wipe log files<br />
       1.0.0 initial release <br />
       ]]>
   </change-notes>

@@ -20,8 +20,8 @@ import com.intellij.openapi.components.StorageScheme;
 @State(
         name = "TomcatDeleteWebappsConfig",
         storages = {
-                @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
-                @Storage(id = "dir", file = StoragePathMacros.PROJECT_CONFIG_DIR + "/machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
+                @Storage(file = StoragePathMacros.PROJECT_FILE),
+                @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/machak_tomcat_delete.xml", scheme = StorageScheme.DIRECTORY_BASED)})
 public class ProjectComponent extends ApplicationComponent implements com.intellij.openapi.components.ProjectComponent {
 
 
