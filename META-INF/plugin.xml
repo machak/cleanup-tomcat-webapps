@@ -6,7 +6,7 @@
 <idea-plugin>
   <id>com.machak.tomcat.plugin.id</id>
   <name>Cleanup tomcat webapps dir</name>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <vendor email="me@machak.com" url="https://github.com/machak/intellij-cleanup-tomcat-dir">machak</vendor>
 
   <description><![CDATA[
