@@ -91,14 +91,13 @@ public class PluginConfiguration extends BaseConfigurable {
         state.setShowDialog(showConfirmationDialog.isSelected());
         state.setDeleteLogFiles(deleteLogFiles.isSelected());
         state.setTomcatDirectory(tomcatDirectory.getText());
-
-
     }
 
     public void getData(final StorageState state) {
 
         showConfirmationDialog.setSelected(state.isShowDialog());
         tomcatDirectory.setText(state.getTomcatDirectory());
+        deleteLogFiles.setSelected(state.isDeleteLogFiles());
     }
 
     public boolean isModified(final StorageState component) {

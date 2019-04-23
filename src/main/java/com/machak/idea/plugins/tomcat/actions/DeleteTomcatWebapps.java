@@ -9,7 +9,12 @@ package com.machak.idea.plugins.tomcat.actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import com.google.common.base.Strings;
 import com.intellij.notification.Notification;
@@ -40,7 +45,6 @@ public class DeleteTomcatWebapps extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-
 
 
         project = CommonDataKeys.PROJECT.getData(event.getDataContext());
@@ -83,7 +87,7 @@ public class DeleteTomcatWebapps extends AnAction {
             boolean invalidDir = true;
             mainLoop:
             for (File file : files) {
-                if (file.getName().equals("bin")) {
+                if (file.getName().equals("bin") && file.isDirectory()) {
                     final File[] configFiles = file.listFiles();
                     if (configFiles != null) {
                         for (File configFile : configFiles) {
@@ -114,8 +118,10 @@ public class DeleteTomcatWebapps extends AnAction {
 
     private void deleteFiles(final String webappsDirectory, final File webappDir, final StorageState state) {
         final String[] filePaths = webappDir.list();
-        for (String name : filePaths) {
-            deleteFile(new File(String.format("%s%s", webappsDirectory, name)));
+        if (filePaths != null) {
+            for (String name : filePaths) {
+                deleteFile(new File(String.format("%s%s", webappsDirectory, name)));
+            }
         }
         // check if logs needs to be deleted:
         if (state.isDeleteLogFiles()) {
@@ -125,9 +131,11 @@ public class DeleteTomcatWebapps extends AnAction {
                 final File logDir = new File(logDirectory);
                 if (logDir.exists() && logDir.isDirectory()) {
                     final File[] files = logDir.listFiles();
-                    for (File file : files) {
-                        if (!file.isDirectory()) {
-                            deleteFile(file);
+                    if (files != null) {
+                        for (File file : files) {
+                            if (!file.isDirectory()) {
+                                deleteFile(file);
+                            }
                         }
                     }
                 }
