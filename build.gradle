@@ -16,7 +16,7 @@
 
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.3.12'
+    id 'org.jetbrains.intellij' version '0.6.5'
 }
 
 apply plugin: 'idea'
@@ -25,7 +25,7 @@ apply plugin: 'java'
 
 
 group 'com.machak'
-version '1.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -43,7 +43,7 @@ dependencies {
 }
 patchPluginXml {
     sinceBuild '163'
-    untilBuild '204'
+    untilBuild '404'
 }
 
 intellij {
